@@ -32,7 +32,7 @@ void* next_int (void* current, int length){
     return current;
 }
 
-int part(void* A, int lo, int hi, void* (*next)(void*, int)) {
+int part(void* A, int lo, int hi, void* (*next)(void*, int), int type_size) {
     void* pivot = next(A, (hi + lo) / 2);
     int i = lo;
     int j = hi;
@@ -46,18 +46,18 @@ int part(void* A, int lo, int hi, void* (*next)(void*, int)) {
         if (i >= j) {
             return j;
         }
-        swap(next(A, i), next(A, j), sizeof(int));
+        swap(next(A, i), next(A, j), type_size);
         i++;
         j--;
     }
 }
 
-void quicksort(void* A, int lo, int hi)
+void quicksort(void* A, int lo, int hi, void* (*next)(void*, int), int type_size)
 {
     if (lo < hi) {
-        int p = part(A, lo, hi, next_int);
-        quicksort(A, lo, p);
-        quicksort(A, p + 1, hi);
+        int p = part(A, lo, hi, next, type_size);
+        quicksort(A, lo, p, next, type_size);
+        quicksort(A, p + 1, hi, next, type_size);
     }
 }
 
@@ -69,7 +69,7 @@ int main()
     for (int i = 0; i < n; i++){
         cin >> arr[i];
     }
-    quicksort(arr, 0, n - 1);
+    quicksort(arr, 0, n - 1, next_int, sizeof(int));
     for (int i = 0; i < n; i++) {
         cout << arr[i] << " ";
     }
