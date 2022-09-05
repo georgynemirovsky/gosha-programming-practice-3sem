@@ -14,7 +14,8 @@ void swap (void* a, void* b, int type_size){
 int main(){
     char a, b;
     cin >> a >> b;
+    cout << "Before swap: a = " << a << ", b = " << b << endl;
     swap(&a , &b, sizeof(char));
-    cout << a << " " << b << endl;
+    cout << "After swap: a = " << a << ", b = " << b << endl;
     return 0;
 }
