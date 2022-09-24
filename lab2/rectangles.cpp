@@ -2,6 +2,14 @@
 #include <string>
 
 using namespace std;
+
+string line_without_spase (string a) {
+    string tmp;
+    for (char c : a)
+        if (c != ' ')
+            tmp += c;
+    return tmp;
+}
 struct Point {
     unsigned long long x, y;
     Point ( unsigned long long x , unsigned long long y ): x(x), y(y) { }
@@ -122,12 +130,7 @@ Rectangle calk(string expression){
 int main() {
     string expression;
     getline(cin, expression);
-    string tmp;
-    for (char c : expression)
-        if (c != ' ')
-            tmp += c;
-    expression = tmp;
-    Rectangle rec = calk(expression);
+    Rectangle rec = calk(line_without_spase(expression));
     rec.print();
     return 0;
 }
