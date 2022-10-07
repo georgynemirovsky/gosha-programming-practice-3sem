@@ -98,7 +98,7 @@ class Square: public Shape {
         Square(vector<Point> storage): Shape(storage), a(length(storage[0], storage[1])) {}
 
         double area() override {
-            return (a * a * a * a);
+            return (a * a);
         }
 
         double perimeter() override {
