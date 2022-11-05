@@ -50,44 +50,73 @@ template <typename T>
 class shared_ptr
 {
 public:
-    explicit shared_ptr(T* ptr): cptr(ptr) { }
-    shared_ptr(shared_ptr& other): cptr(other.ptr)
+    explicit shared_ptr(T* ptr)
     {
-        cptr->counter++;
+        cptr = new ControlBlock<T*>;
+        cptr->object = ptr;
+        cptr->counter = 1;
+    }
+    shared_ptr(const shared_ptr& other)
+    {
+        cptr = other.cptr;
+        (cptr->counter)++;
     }
     shared_ptr(shared_ptr&& other)
     {
-
+        cptr = other->cptr;
+        other->cptr = nullptr;
     }
-    shared_ptr& operator=(shared_ptr& other)
+    shared_ptr& operator=(const shared_ptr& other)
     {
-
+        if (this != &other)
+        {
+            ~(*this);
+            cptr = other->cptr;
+            cptr->counter++;
+            return *this;
+        } else
+        {
+            return *this;
+        }
     }
     shared_ptr& operator=(shared_ptr&& other)
     {
-
+        ~(*this);
+        cptr = other.cptr;
+        other->cptr = nullptr;
     }
     ~shared_ptr()
     {
-
+        cptr.counter--;
+        if (cptr.counter == 0)
+        {
+            ~cptr;
+            cptr = nullptr;
+        }
     }
 private:
     template <typename U>
-    struct ControlBlcok
+    struct ControlBlock
     {
-        ControlBlock(U* object): object(object), counter(1) { }
+        ControlBlock(U object): object(object), counter(1) { }
 
-        ~ControlBlcok()
+        ControlBlcok(const ControlBlock& other): object(other.object)
         {
-            delete counter;
+            other.object = nullptr;
+            std::cout << "Dobroe utro devochcy" << '\n';
+        }
+
+        ~ControlBlock()
+        {
             delete object;
+            std::cout << "devochky vy upaly" << '\n';
         }
 
         size_t counter = 0;
         U object;
     };
 
-    ControlBlcok<T*> cptr = nullptr;
+    ControlBlock<T*>* cptr = nullptr;
 
     template <typename U, typename... Args>
     friend shared_ptr<U> make_shared(Args&&... args);
