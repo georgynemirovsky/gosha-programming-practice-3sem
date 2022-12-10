@@ -93,6 +93,8 @@ public:
 int main()
 {
     IntComparator comp;
+    comp = IntComparator();
+    comp = IntComparator();
     std::vector<int> arr = {4, 6, 2, 7, 9, 72, 6, 32, 89, 23, 76, 45, 5, 7, 12};
     PriorityQueue<int> queue(arr, comp);
     for (int i = 0; i < 14; i++)
